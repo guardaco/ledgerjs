@@ -136,4 +136,3 @@ main().catch(function (e) {
   console.error(e);
   process.exit(1);
 });
-//# sourceMappingURL=cmd.js.map

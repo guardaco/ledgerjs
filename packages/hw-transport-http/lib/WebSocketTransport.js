@@ -223,4 +223,3 @@ WebSocketTransport.check = function () {
 }();
 
 exports.default = WebSocketTransport;
-//# sourceMappingURL=WebSocketTransport.js.map

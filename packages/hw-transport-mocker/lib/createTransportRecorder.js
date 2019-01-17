@@ -67,4 +67,3 @@ exports.default = function (DecoratedTransport, recordStore) {
 
   return TransportRecorder;
 };
-//# sourceMappingURL=createTransportRecorder.js.map

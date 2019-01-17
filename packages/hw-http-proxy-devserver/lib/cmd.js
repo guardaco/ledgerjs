@@ -344,4 +344,3 @@ console.log("DEBUG_COMM_HTTP_PROXY=" + ["localhost"].concat(_toConsumableArray(i
 server.listen(PORT, function () {
   console.log("\nNano S proxy started on " + ips[0] + "\n");
 });
-//# sourceMappingURL=cmd.js.map

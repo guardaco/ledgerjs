@@ -104,4 +104,3 @@ function asyncWhile(predicate, callback) {
 var isLedgerDevice = exports.isLedgerDevice = function isLedgerDevice(device) {
   return device.vendorId === 0x2581 && device.productId === 0x3b7c || device.vendorId === 0x2c97;
 };
-//# sourceMappingURL=utils.js.map

@@ -120,4 +120,3 @@ function checkStellarBip32Path(path) {
     }
   });
 }
-//# sourceMappingURL=utils.js.map

@@ -204,4 +204,3 @@ var Eth = function () {
 }();
 
 exports.default = Eth;
-//# sourceMappingURL=Eth.js.map

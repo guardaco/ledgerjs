@@ -10,9 +10,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _u2fApi = require("u2f-api");
 
-var _hwTransport = require("@ledgerhq/hw-transport");
+var _Transport2 = require("../../hw-transport/lib/Transport");
 
-var _hwTransport2 = _interopRequireDefault(_hwTransport);
+var _Transport3 = _interopRequireDefault(_Transport2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25,7 +25,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function wrapU2FTransportError(originalError, message, id) {
-  var err = new _hwTransport.TransportError(message, id);
+  var err = new _Transport2.TransportError(message, id);
   // $FlowFixMe
   err.originalError = originalError;
   return err;
@@ -221,7 +221,7 @@ var TransportU2F = function (_Transport) {
   }]);
 
   return TransportU2F;
-}(_hwTransport2.default);
+}(_Transport3.default);
 
 TransportU2F.isSupported = _u2fApi.isSupported;
 
@@ -239,7 +239,7 @@ TransportU2F.listen = function (observer) {
       observer.next({ type: "add", descriptor: null });
       observer.complete();
     } else {
-      observer.error(new _hwTransport.TransportError("U2F browser support is needed for Ledger. " + "Please use Chrome, Opera or Firefox with a U2F extension. " + "Also make sure you're on an HTTPS connection", "U2FNotSupported"));
+      observer.error(new _Transport2.TransportError("U2F browser support is needed for Ledger. " + "Please use Chrome, Opera or Firefox with a U2F extension. " + "Also make sure you're on an HTTPS connection", "U2FNotSupported"));
     }
   });
   return {
@@ -250,4 +250,3 @@ TransportU2F.listen = function (observer) {
 };
 
 exports.default = TransportU2F;
-//# sourceMappingURL=TransportU2F.js.map

@@ -471,4 +471,3 @@ var Transport = function () {
 Transport.ErrorMessage_ListenTimeout = "No Ledger device found (timeout)";
 Transport.ErrorMessage_NoDeviceFound = "No Ledger device found";
 exports.default = Transport;
-//# sourceMappingURL=Transport.js.map

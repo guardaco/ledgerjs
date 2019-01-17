@@ -100,4 +100,3 @@ function asyncWhile(predicate, callback) {
   }
   return Promise.resolve([]).then(iterate);
 }
-//# sourceMappingURL=utils.js.map

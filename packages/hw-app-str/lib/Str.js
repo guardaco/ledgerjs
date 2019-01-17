@@ -277,4 +277,3 @@ var Str = function () {
 }();
 
 exports.default = Str;
-//# sourceMappingURL=Str.js.map

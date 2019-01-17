@@ -84,4 +84,3 @@ exports.default = function (recordStore) {
 
   return TransportReplayer;
 };
-//# sourceMappingURL=createTransportReplayer.js.map

@@ -172,4 +172,3 @@ exports.default = function (urls) {
 
   return StaticTransport;
 };
-//# sourceMappingURL=withStaticURLs.js.map

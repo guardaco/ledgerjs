@@ -195,4 +195,3 @@ HttpTransport.check = function () {
 }();
 
 exports.default = HttpTransport;
-//# sourceMappingURL=HttpTransport.js.map

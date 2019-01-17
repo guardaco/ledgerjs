@@ -317,4 +317,3 @@ function createLedgerSubprovider(getTransport, options) {
 
   return subprovider;
 }
-//# sourceMappingURL=index.js.map

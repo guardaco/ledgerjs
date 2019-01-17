@@ -61,4 +61,3 @@ var RecordStore = function () {
 }();
 
 exports.default = RecordStore;
-//# sourceMappingURL=RecordStore.js.map

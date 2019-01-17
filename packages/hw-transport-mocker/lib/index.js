@@ -22,4 +22,3 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.RecordStore = _RecordStore2.default;
 exports.createTransportRecorder = _createTransportRecorder2.default;
 exports.createTransportReplayer = _createTransportReplayer2.default;
-//# sourceMappingURL=index.js.map

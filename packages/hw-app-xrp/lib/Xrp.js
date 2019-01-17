@@ -290,4 +290,3 @@ var Xrp = function () {
 }();
 
 exports.default = Xrp;
-//# sourceMappingURL=Xrp.js.map
