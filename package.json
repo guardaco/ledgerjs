@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "npm run build",
     "prettier": "prettier --write 'packages/*/src/**/*.js'",
     "prettier-diff": "prettier --list-different 'packages/*/src/**/*.js'",
     "lint": "eslint packages/**/src",
