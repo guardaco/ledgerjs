@@ -1,10 +1,10 @@
 //@flow
-import Transport, { TransportError } from "@ledgerhq/hw-transport";
+import Transport, { TransportError } from "../../hw-transport/lib/Transport";
 import type {
   Observer,
   DescriptorEvent,
   Subscription
-} from "@ledgerhq/hw-transport";
+} from "../../hw-transport/lib/Transport";
 import { getLedgerDevices, requestLedgerDevice, isSupported } from "./webusb";
 import hidFraming from "./hid-framing";
 

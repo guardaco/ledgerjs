@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _hwTransport = require("@ledgerhq/hw-transport");
+var _Transport = require("../../hw-transport/lib/Transport");
 
 var Tag = 0x05;
 
@@ -47,13 +47,13 @@ exports.default = function (channel, packetSize) {
           sequence = _ref.sequence;
 
       if (chunk.readUInt16BE(0) !== channel) {
-        throw new _hwTransport.TransportError("Invalid channel", "InvalidChannel");
+        throw new _Transport.TransportError("Invalid channel", "InvalidChannel");
       }
       if (chunk.readUInt8(2) !== Tag) {
-        throw new _hwTransport.TransportError("Invalid tag", "InvalidTag");
+        throw new _Transport.TransportError("Invalid tag", "InvalidTag");
       }
       if (chunk.readUInt16BE(3) !== sequence) {
-        throw new _hwTransport.TransportError("Invalid sequence", "InvalidSequence");
+        throw new _Transport.TransportError("Invalid sequence", "InvalidSequence");
       }
 
       if (!acc) {

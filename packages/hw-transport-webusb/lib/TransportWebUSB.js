@@ -36,9 +36,9 @@ var _inherits2 = require("babel-runtime/helpers/inherits");
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _hwTransport = require("@ledgerhq/hw-transport");
+var _Transport2 = require("../../hw-transport/lib/Transport");
 
-var _hwTransport2 = _interopRequireDefault(_hwTransport);
+var _Transport3 = _interopRequireDefault(_Transport2);
 
 var _webusb = require("./webusb");
 
@@ -161,7 +161,7 @@ var TransportWebUSB = function (_Transport) {
     }()
   }]);
   return TransportWebUSB;
-}(_hwTransport2.default);
+}(_Transport3.default);
 
 TransportWebUSB.isSupported = _webusb.isSupported;
 TransportWebUSB.list = _webusb.getLedgerDevices;
@@ -270,7 +270,7 @@ var _initialiseProps = function _initialiseProps() {
                 break;
               }
 
-              throw new _hwTransport.TransportError("Transport race condition", "RaceCondition");
+              throw new _Transport2.TransportError("Transport race condition", "RaceCondition");
 
             case 2:
               resolveBusy = void 0;
