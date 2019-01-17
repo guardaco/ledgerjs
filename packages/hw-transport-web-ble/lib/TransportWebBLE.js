@@ -4,9 +4,41 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _slicedToArray2 = require("babel-runtime/helpers/slicedToArray");
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _hwTransport = require("@ledgerhq/hw-transport");
 
@@ -26,16 +58,9 @@ var _monitorCharacteristic = require("./monitorCharacteristic");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+var ServiceUuid = "d973f2e0-b19e-11e2-9e96-0800200c9a66";
 /* eslint-disable prefer-template */
 
-var ServiceUuid = "d973f2e0-b19e-11e2-9e96-0800200c9a66";
 var WriteCharacteristicUuid = "d973f2e2-b19e-11e2-9e96-0800200c9a66";
 var NotifyCharacteristicUuid = "d973f2e1-b19e-11e2-9e96-0800200c9a66";
 
@@ -81,9 +106,8 @@ var transportsCache = {};
  */
 
 var BluetoothTransport = function (_Transport) {
-  _inherits(BluetoothTransport, _Transport);
-
-  _createClass(BluetoothTransport, null, [{
+  (0, _inherits3.default)(BluetoothTransport, _Transport);
+  (0, _createClass3.default)(BluetoothTransport, null, [{
     key: "listen",
 
 
@@ -120,10 +144,10 @@ var BluetoothTransport = function (_Transport) {
   }, {
     key: "open",
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(deviceOrId) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(deviceOrId) {
         var device, bluetooth, service, _ref2, _ref3, writeC, notifyC, notifyObservable, notif, transport, onDisconnect;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -185,11 +209,11 @@ var BluetoothTransport = function (_Transport) {
               case 18:
                 service = _context.sent;
                 _context.next = 21;
-                return Promise.all([service.getCharacteristic(WriteCharacteristicUuid), service.getCharacteristic(NotifyCharacteristicUuid)]);
+                return _promise2.default.all([service.getCharacteristic(WriteCharacteristicUuid), service.getCharacteristic(NotifyCharacteristicUuid)]);
 
               case 21:
                 _ref2 = _context.sent;
-                _ref3 = _slicedToArray(_ref2, 2);
+                _ref3 = (0, _slicedToArray3.default)(_ref2, 2);
                 writeC = _ref3[0];
                 notifyC = _ref3[1];
                 notifyObservable = (0, _monitorCharacteristic.monitorCharacteristic)(notifyC).pipe((0, _operators.tap)(function (value) {
@@ -239,17 +263,17 @@ var BluetoothTransport = function (_Transport) {
   function BluetoothTransport(device, writeCharacteristic, notifyObservable) {
     var _this2 = this;
 
-    _classCallCheck(this, BluetoothTransport);
+    (0, _classCallCheck3.default)(this, BluetoothTransport);
 
-    var _this = _possibleConstructorReturn(this, (BluetoothTransport.__proto__ || Object.getPrototypeOf(BluetoothTransport)).call(this));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (BluetoothTransport.__proto__ || (0, _getPrototypeOf2.default)(BluetoothTransport)).call(this));
 
     _this.mtuSize = 20;
     _this.notYetDisconnected = true;
 
     _this.exchange = function (apdu) {
-      return _this.atomic(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      return _this.atomic((0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
         var debug, msgIn, data, msgOut;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -296,8 +320,8 @@ var BluetoothTransport = function (_Transport) {
     };
 
     _this.write = function () {
-      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(buffer) {
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(buffer) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -322,9 +346,9 @@ var BluetoothTransport = function (_Transport) {
     }();
 
     _this.atomic = function () {
-      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(f) {
+      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(f) {
         var resolveBusy, busyPromise, res;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
@@ -337,7 +361,7 @@ var BluetoothTransport = function (_Transport) {
 
               case 2:
                 resolveBusy = void 0;
-                busyPromise = new Promise(function (r) {
+                busyPromise = new _promise2.default(function (r) {
                   resolveBusy = r;
                 });
 
@@ -382,14 +406,14 @@ var BluetoothTransport = function (_Transport) {
     return _this;
   }
 
-  _createClass(BluetoothTransport, [{
+  (0, _createClass3.default)(BluetoothTransport, [{
     key: "setScrambleKey",
     value: function setScrambleKey() {}
   }, {
     key: "close",
     value: function () {
-      var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {
+        return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
@@ -416,12 +440,11 @@ var BluetoothTransport = function (_Transport) {
       return close;
     }()
   }]);
-
   return BluetoothTransport;
 }(_hwTransport2.default);
 
 BluetoothTransport.isSupported = function () {
-  return Promise.resolve().then(requiresBluetooth).then(function () {
+  return _promise2.default.resolve().then(requiresBluetooth).then(function () {
     return true;
   }, function () {
     return false;
@@ -433,13 +456,13 @@ BluetoothTransport.observeAvailability = function (observer) {
 };
 
 BluetoothTransport.list = function () {
-  return Promise.resolve([]);
+  return _promise2.default.resolve([]);
 };
 
 BluetoothTransport.disconnect = function () {
-  var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(id) {
+  var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(id) {
     var transport;
-    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+    return _regenerator2.default.wrap(function _callee6$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:

@@ -3,10 +3,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getLedgerDevices = exports.isSupported = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof2 = require("babel-runtime/helpers/typeof");
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
 
 exports.requestLedgerDevice = requestLedgerDevice;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var ledgerDevices = [{ vendorId: 0x2581, productId: 0x3b7c }, { vendorId: 0x2c97 }];
 
 var isLedgerDevice = function isLedgerDevice(device) {
@@ -16,7 +26,7 @@ var isLedgerDevice = function isLedgerDevice(device) {
 };
 
 function requestLedgerDevice() {
-  return Promise.resolve().then(function () {
+  return _promise2.default.resolve().then(function () {
     return (
       // $FlowFixMe
       navigator.usb.requestDevice({ filters: ledgerDevices })
@@ -25,13 +35,13 @@ function requestLedgerDevice() {
 }
 
 var isSupported = exports.isSupported = function isSupported() {
-  return Promise.resolve((typeof navigator === "undefined" ? "undefined" : _typeof(navigator)) === "object" &&
+  return _promise2.default.resolve((typeof navigator === "undefined" ? "undefined" : (0, _typeof3.default)(navigator)) === "object" &&
   // $FlowFixMe
-  _typeof(navigator.usb) === "object");
+  (0, _typeof3.default)(navigator.usb) === "object");
 };
 
 var getLedgerDevices = exports.getLedgerDevices = function getLedgerDevices() {
-  return Promise.resolve().then(function () {
+  return _promise2.default.resolve().then(function () {
     return (
       // $FlowFixMe
       navigator.usb.getDevices()

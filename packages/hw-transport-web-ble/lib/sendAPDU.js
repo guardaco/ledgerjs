@@ -5,11 +5,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.sendAPDU = undefined;
 
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
 var _rxjs = require("rxjs");
 
 var _debug = require("./debug");
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TagId = 0x05;
 
@@ -36,10 +48,10 @@ var sendAPDU = exports.sendAPDU = function sendAPDU(write, apdu, mtuSize) {
 
   return _rxjs.Observable.create(function (o) {
     var main = function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
         var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, chunk;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -47,7 +59,7 @@ var sendAPDU = exports.sendAPDU = function sendAPDU(write, apdu, mtuSize) {
                 _didIteratorError = false;
                 _iteratorError = undefined;
                 _context.prev = 3;
-                _iterator = chunks[Symbol.iterator]();
+                _iterator = (0, _getIterator3.default)(chunks);
 
               case 5:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {

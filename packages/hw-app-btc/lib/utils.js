@@ -3,16 +3,25 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.isLedgerDevice = undefined;
+
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
 exports.defer = defer;
 exports.splitPath = splitPath;
 exports.eachSeries = eachSeries;
 exports.foreach = foreach;
 exports.doIf = doIf;
 exports.asyncWhile = asyncWhile;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function defer() {
   var resolve = void 0,
       reject = void 0;
-  var promise = new Promise(function (success, failure) {
+  var promise = new _promise2.default(function (success, failure) {
     resolve = success;
     reject = failure;
   });
@@ -62,7 +71,7 @@ function eachSeries(arr, fun) {
     return p.then(function () {
       return fun(e);
     });
-  }, Promise.resolve());
+  }, _promise2.default.resolve());
 }
 
 function foreach(arr, callback) {
@@ -74,13 +83,13 @@ function foreach(arr, callback) {
       return iterate(index + 1, array, result);
     });
   }
-  return Promise.resolve().then(function () {
+  return _promise2.default.resolve().then(function () {
     return iterate(0, arr, []);
   });
 }
 
 function doIf(condition, callback) {
-  return Promise.resolve().then(function () {
+  return _promise2.default.resolve().then(function () {
     if (condition) {
       return callback();
     }
@@ -98,7 +107,7 @@ function asyncWhile(predicate, callback) {
       });
     }
   }
-  return Promise.resolve([]).then(iterate);
+  return _promise2.default.resolve([]).then(iterate);
 }
 
 var isLedgerDevice = exports.isLedgerDevice = function isLedgerDevice(device) {

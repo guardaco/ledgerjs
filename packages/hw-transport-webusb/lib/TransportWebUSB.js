@@ -4,7 +4,37 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _hwTransport = require("@ledgerhq/hw-transport");
 
@@ -18,15 +48,8 @@ var _hidFraming2 = _interopRequireDefault(_hidFraming);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 var configurationValue = 1;
+
 var interfaceNumber = 2;
 var endpointNumber = 3;
 
@@ -39,12 +62,12 @@ var endpointNumber = 3;
  */
 
 var TransportWebUSB = function (_Transport) {
-  _inherits(TransportWebUSB, _Transport);
+  (0, _inherits3.default)(TransportWebUSB, _Transport);
 
   function TransportWebUSB(device) {
-    _classCallCheck(this, TransportWebUSB);
+    (0, _classCallCheck3.default)(this, TransportWebUSB);
 
-    var _this = _possibleConstructorReturn(this, (TransportWebUSB.__proto__ || Object.getPrototypeOf(TransportWebUSB)).call(this));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (TransportWebUSB.__proto__ || (0, _getPrototypeOf2.default)(TransportWebUSB)).call(this));
 
     _initialiseProps.call(_this);
 
@@ -52,11 +75,11 @@ var TransportWebUSB = function (_Transport) {
     return _this;
   }
 
-  _createClass(TransportWebUSB, [{
+  (0, _createClass3.default)(TransportWebUSB, [{
     key: "close",
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -94,8 +117,8 @@ var TransportWebUSB = function (_Transport) {
   }], [{
     key: "open",
     value: function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(device) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(device) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -137,7 +160,6 @@ var TransportWebUSB = function (_Transport) {
       return open;
     }()
   }]);
-
   return TransportWebUSB;
 }(_hwTransport2.default);
 
@@ -165,9 +187,9 @@ var _initialiseProps = function _initialiseProps() {
   this.packetSize = 64;
 
   this.exchange = function (apdu) {
-    return _this2.atomic(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    return _this2.atomic((0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
       var debug, channel, packetSize, framing, blocks, i, result, acc, r;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      return _regenerator2.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
@@ -237,9 +259,9 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.atomic = function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(f) {
+    var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(f) {
       var resolveBusy, busyPromise, res;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      return _regenerator2.default.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
@@ -252,7 +274,7 @@ var _initialiseProps = function _initialiseProps() {
 
             case 2:
               resolveBusy = void 0;
-              busyPromise = new Promise(function (r) {
+              busyPromise = new _promise2.default(function (r) {
                 resolveBusy = r;
               });
 

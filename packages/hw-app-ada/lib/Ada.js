@@ -4,25 +4,25 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _regenerator = require("babel-runtime/regenerator");
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /********************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   Ledger Node JS API
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   (c) 2016-2017 Ledger
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  Licensed under the Apache License, Version 2.0 (the "License");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  you may not use this file except in compliance with the License.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  You may obtain a copy of the License at
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *      http://www.apache.org/licenses/LICENSE-2.0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  Unless required by applicable law or agreed to in writing, software
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  distributed under the License is distributed on an "AS IS" BASIS,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  See the License for the specific language governing permissions and
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  limitations under the License.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ********************************************************************************/
+var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _slicedToArray2 = require("babel-runtime/helpers/slicedToArray");
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _nodeInt = require("node-int64");
 
@@ -32,10 +32,22 @@ var _hwTransport = require("@ledgerhq/hw-transport");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+/********************************************************************************
+ *   Ledger Node JS API
+ *   (c) 2016-2017 Ledger
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
 var CLA = 0x80;
 
 var INS_GET_PUBLIC_KEY = 0x01;
@@ -69,8 +81,7 @@ var INDEX_MAX_EXCEEDED = 0x5302;
 var Ada = function () {
   function Ada(transport) {
     var scrambleKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "ADA";
-
-    _classCallCheck(this, Ada);
+    (0, _classCallCheck3.default)(this, Ada);
 
     this.transport = transport;
     this.methods = ["isConnected", "getWalletRecoveryPassphrase", "getWalletPublicKeyWithIndex", "signTransaction"];
@@ -90,13 +101,13 @@ var Ada = function () {
    */
 
 
-  _createClass(Ada, [{
+  (0, _createClass3.default)(Ada, [{
     key: "isConnected",
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
         var response, _response, major, minor, patch;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -105,7 +116,7 @@ var Ada = function () {
 
               case 2:
                 response = _context.sent;
-                _response = _slicedToArray(response, 3), major = _response[0], minor = _response[1], patch = _response[2];
+                _response = (0, _slicedToArray3.default)(response, 3), major = _response[0], minor = _response[1], patch = _response[2];
                 return _context.abrupt("return", { major: major, minor: minor, patch: patch });
 
               case 5:
@@ -142,10 +153,10 @@ var Ada = function () {
   }, {
     key: "getWalletRecoveryPassphrase",
     value: function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
         var response, _response2, publicKeyLength, publicKey, chainCode;
 
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -154,7 +165,7 @@ var Ada = function () {
 
               case 2:
                 response = _context2.sent;
-                _response2 = _slicedToArray(response, 1), publicKeyLength = _response2[0];
+                _response2 = (0, _slicedToArray3.default)(response, 1), publicKeyLength = _response2[0];
                 publicKey = response.slice(1, 1 + publicKeyLength).toString("hex");
                 chainCode = response.slice(1 + publicKeyLength, 1 + publicKeyLength + 32).toString("hex");
                 return _context2.abrupt("return", { publicKey: publicKey, chainCode: chainCode });
@@ -194,10 +205,10 @@ var Ada = function () {
   }, {
     key: "getWalletPublicKeyWithIndex",
     value: function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(index) {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(index) {
         var data, response, _response3, publicKeyLength, publicKey;
 
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -218,7 +229,7 @@ var Ada = function () {
 
               case 6:
                 response = _context3.sent;
-                _response3 = _slicedToArray(response, 1), publicKeyLength = _response3[0];
+                _response3 = (0, _slicedToArray3.default)(response, 1), publicKeyLength = _response3[0];
                 publicKey = response.slice(1, 1 + publicKeyLength).toString("hex");
                 return _context3.abrupt("return", { publicKey: publicKey });
 
@@ -262,8 +273,8 @@ var Ada = function () {
   }, {
     key: "signTransaction",
     value: function () {
-      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(txHex, indexes) {
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(txHex, indexes) {
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
@@ -299,10 +310,10 @@ var Ada = function () {
   }, {
     key: "setTransaction",
     value: function () {
-      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(txHex) {
+      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(txHex) {
         var rawTx, chunkSize, response, i, chunk, p2, p1, res, _res, _inputs, _outputs, _txs, offset, _i, _address, _amount;
 
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
@@ -336,7 +347,7 @@ var Ada = function () {
 
 
                 if (res.length > 4) {
-                  _res = _slicedToArray(res, 2), _inputs = _res[0], _outputs = _res[1];
+                  _res = (0, _slicedToArray3.default)(res, 2), _inputs = _res[0], _outputs = _res[1];
                   _txs = [];
                   offset = 2;
 
@@ -388,10 +399,10 @@ var Ada = function () {
   }, {
     key: "signTransactionWithIndexes",
     value: function () {
-      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(indexes) {
+      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(indexes) {
         var response, i, data, res, _digest;
 
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        return _regenerator2.default.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
@@ -457,7 +468,6 @@ var Ada = function () {
       return signTransactionWithIndexes;
     }()
   }]);
-
   return Ada;
 }();
 

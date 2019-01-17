@@ -4,7 +4,21 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _values = require("babel-runtime/core-js/object/values");
+
+var _values2 = _interopRequireDefault(_values);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _extends2 = require("babel-runtime/helpers/extends");
+
+var _extends3 = _interopRequireDefault(_extends2);
 
 exports.default = createLedgerSubprovider;
 
@@ -25,8 +39,6 @@ var _ethereumjsTx = require("ethereumjs-tx");
 var _ethereumjsTx2 = _interopRequireDefault(_ethereumjsTx);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var allowedHdPaths = ["44'/1'", "44'/60'", "44'/61'"];
 
@@ -80,10 +92,10 @@ const web3 = new Web3(engine);
  */
 function createLedgerSubprovider(getTransport, options) {
   var _getAccounts = function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
       var transport, eth, addresses, i, _path, address;
 
-      return regeneratorRuntime.wrap(function _callee$(_context) {
+      return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -141,9 +153,9 @@ function createLedgerSubprovider(getTransport, options) {
   }();
 
   var _signPersonalMessage = function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(msgData) {
+    var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(msgData) {
       var path, transport, eth, result, v, vHex;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      return _regenerator2.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -197,9 +209,9 @@ function createLedgerSubprovider(getTransport, options) {
   }();
 
   var _signTransaction = function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(txData) {
+    var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(txData) {
       var path, transport, eth, tx, result, signedChainId, validChainId;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      return _regenerator2.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
@@ -274,7 +286,7 @@ function createLedgerSubprovider(getTransport, options) {
     };
   }();
 
-  var _defaultOptions$optio = _extends({}, defaultOptions, options),
+  var _defaultOptions$optio = (0, _extends3.default)({}, defaultOptions, options),
       networkId = _defaultOptions$optio.networkId,
       path = _defaultOptions$optio.path,
       askConfirm = _defaultOptions$optio.askConfirm,
@@ -294,7 +306,7 @@ function createLedgerSubprovider(getTransport, options) {
   var subprovider = new _hookedWallet2.default({
     getAccounts: function getAccounts(callback) {
       _getAccounts().then(function (res) {
-        return callback(null, Object.values(res));
+        return callback(null, (0, _values2.default)(res));
       }).catch(function (err) {
         return callback(err, null);
       });

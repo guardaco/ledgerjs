@@ -4,17 +4,31 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _bip32Path = require("bip32-path");
 
 var _bip32Path2 = _interopRequireDefault(_bip32Path);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * Ripple API
@@ -26,8 +40,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Xrp = function () {
   function Xrp(transport) {
     var scrambleKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "XRP";
-
-    _classCallCheck(this, Xrp);
+    (0, _classCallCheck3.default)(this, Xrp);
 
     this.transport = transport;
     transport.decorateAppAPIMethods(this, ["getAddress", "signTransaction", "getAppConfiguration"], scrambleKey);
@@ -47,12 +60,12 @@ var Xrp = function () {
    */
 
 
-  _createClass(Xrp, [{
+  (0, _createClass3.default)(Xrp, [{
     key: "getAddress",
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(path, display, chainCode, ed25519) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(path, display, chainCode, ed25519) {
         var bipPath, curveMask, cla, ins, p1, p2, data, response, result, publicKeyLength, addressLength;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -119,10 +132,10 @@ var Xrp = function () {
   }, {
     key: "signTransaction",
     value: function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(path, rawTxHex, ed25519) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(path, rawTxHex, ed25519) {
         var bipPath, rawTx, curveMask, apdus, offset, _loop, response, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _apdu;
 
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -167,7 +180,7 @@ var Xrp = function () {
                 _didIteratorError = false;
                 _iteratorError = undefined;
                 _context2.prev = 11;
-                _iterator = apdus[Symbol.iterator]();
+                _iterator = (0, _getIterator3.default)(apdus);
 
               case 13:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
@@ -254,9 +267,9 @@ var Xrp = function () {
   }, {
     key: "getAppConfiguration",
     value: function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
         var response, result;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -285,7 +298,6 @@ var Xrp = function () {
       return getAppConfiguration;
     }()
   }]);
-
   return Xrp;
 }();
 

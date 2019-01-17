@@ -4,15 +4,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends2 = require("babel-runtime/helpers/extends");
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _extends3 = _interopRequireDefault(_extends2);
 
-// TODO future refactoring
-// - drop utils.js & refactoring with async/await style
-// - try to avoid every place we do hex<>Buffer conversion. also accept Buffer as func parameters (could accept both a string or a Buffer in the API)
-// - there are redundant code across apps (see Eth vs Btc). we might want to factorize it somewhere. also each app apdu call should be abstracted it out as an api
+var _assign = require("babel-runtime/core-js/object/assign");
 
+var _assign2 = _interopRequireDefault(_assign);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _utils = require("./utils");
 
@@ -22,10 +36,10 @@ var _createHash2 = _interopRequireDefault(_createHash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+// TODO future refactoring
+// - drop utils.js & refactoring with async/await style
+// - try to avoid every place we do hex<>Buffer conversion. also accept Buffer as func parameters (could accept both a string or a Buffer in the API)
+// - there are redundant code across apps (see Eth vs Btc). we might want to factorize it somewhere. also each app apdu call should be abstracted it out as an api
 var MAX_SCRIPT_BLOCK = 50;
 var DEFAULT_VERSION = 1;
 var DEFAULT_LOCKTIME = 0;
@@ -47,14 +61,13 @@ var OP_CHECKSIG = 0xac;
 var Btc = function () {
   function Btc(transport) {
     var scrambleKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "BTC";
-
-    _classCallCheck(this, Btc);
+    (0, _classCallCheck3.default)(this, Btc);
 
     this.transport = transport;
     transport.decorateAppAPIMethods(this, ["getWalletPublicKey", "signP2SHTransaction", "signMessageNew", "createPaymentTransactionNew"], scrambleKey);
   }
 
-  _createClass(Btc, [{
+  (0, _createClass3.default)(Btc, [{
     key: "hashPublicKey",
     value: function hashPublicKey(buffer) {
       return (0, _createHash2.default)("rmd160").update((0, _createHash2.default)("sha256").update(buffer).digest()).digest();
@@ -199,10 +212,10 @@ var Btc = function () {
   }, {
     key: "getTrustedInputBIP143",
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(indexLookup, transaction) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(indexLookup, transaction) {
         var additionals = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
         var isDecred, sha, hash, data, outputs, locktime;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -630,10 +643,10 @@ var Btc = function () {
           // Do the second run with the individual transaction
           (0, _utils.foreach)(inputs, function (input, i) {
             var script = inputs[i].length >= 3 && typeof inputs[i][2] === "string" ? Buffer.from(inputs[i][2], "hex") : !segwit ? regularOutputs[i].script : Buffer.concat([Buffer.from([OP_DUP, OP_HASH160, HASH_SIZE]), _this5.hashPublicKey(publicKeys[i]), Buffer.from([OP_EQUALVERIFY, OP_CHECKSIG])]);
-            var pseudoTX = Object.assign({}, targetTransaction);
+            var pseudoTX = (0, _assign2.default)({}, targetTransaction);
             var pseudoTrustedInputs = useBip143 ? [trustedInputs[i]] : trustedInputs;
             if (useBip143) {
-              pseudoTX.inputs = [_extends({}, pseudoTX.inputs[i], { script: script })];
+              pseudoTX.inputs = [(0, _extends3.default)({}, pseudoTX.inputs[i], { script: script })];
             } else {
               pseudoTX.inputs[i].script = script;
             }
@@ -800,10 +813,10 @@ var Btc = function () {
       }).then(function () {
         return (0, _utils.foreach)(inputs, function (input, i) {
           var script = inputs[i].length >= 3 && typeof inputs[i][2] === "string" ? Buffer.from(inputs[i][2], "hex") : regularOutputs[i].script;
-          var pseudoTX = Object.assign({}, targetTransaction);
+          var pseudoTX = (0, _assign2.default)({}, targetTransaction);
           var pseudoTrustedInputs = segwit ? [trustedInputs[i]] : trustedInputs;
           if (segwit) {
-            pseudoTX.inputs = [_extends({}, pseudoTX.inputs[i], { script: script })];
+            pseudoTX.inputs = [(0, _extends3.default)({}, pseudoTX.inputs[i], { script: script })];
           } else {
             pseudoTX.inputs[i].script = script;
           }
@@ -1030,7 +1043,6 @@ var Btc = function () {
       }
     }
   }]);
-
   return Btc;
 }();
 

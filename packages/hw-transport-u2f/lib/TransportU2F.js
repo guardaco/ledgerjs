@@ -4,9 +4,41 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _promise = require("babel-runtime/core-js/promise");
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _promise2 = _interopRequireDefault(_promise);
+
+var _typeof2 = require("babel-runtime/helpers/typeof");
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _u2fApi = require("u2f-api");
 
@@ -15,14 +47,6 @@ var _Transport2 = require("../../hw-transport/lib/Transport");
 var _Transport3 = _interopRequireDefault(_Transport2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function wrapU2FTransportError(originalError, message, id) {
   var err = new _Transport2.TransportError(message, id);
@@ -104,9 +128,8 @@ function isTimeoutU2FError(u2fError) {
  */
 
 var TransportU2F = function (_Transport) {
-  _inherits(TransportU2F, _Transport);
-
-  _createClass(TransportU2F, null, [{
+  (0, _inherits3.default)(TransportU2F, _Transport);
+  (0, _createClass3.default)(TransportU2F, null, [{
     key: "open",
 
 
@@ -117,10 +140,10 @@ var TransportU2F = function (_Transport) {
 
     // this transport is not discoverable but we are going to guess if it is here with isSupported()
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(_) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_) {
         var _openTimeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -143,9 +166,9 @@ var TransportU2F = function (_Transport) {
   }]);
 
   function TransportU2F() {
-    _classCallCheck(this, TransportU2F);
+    (0, _classCallCheck3.default)(this, TransportU2F);
 
-    var _this = _possibleConstructorReturn(this, (TransportU2F.__proto__ || Object.getPrototypeOf(TransportU2F)).call(this));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (TransportU2F.__proto__ || (0, _getPrototypeOf2.default)(TransportU2F)).call(this));
 
     _this.unwrap = true;
 
@@ -153,12 +176,12 @@ var TransportU2F = function (_Transport) {
     return _this;
   }
 
-  _createClass(TransportU2F, [{
+  (0, _createClass3.default)(TransportU2F, [{
     key: "exchange",
     value: function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(apdu) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(apdu) {
         var isU2FError;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -172,7 +195,7 @@ var TransportU2F = function (_Transport) {
               case 6:
                 _context2.prev = 6;
                 _context2.t0 = _context2["catch"](0);
-                isU2FError = _typeof(_context2.t0.metaData) === "object";
+                isU2FError = (0, _typeof3.default)(_context2.t0.metaData) === "object";
 
                 if (!isU2FError) {
                   _context2.next = 14;
@@ -216,10 +239,9 @@ var TransportU2F = function (_Transport) {
     key: "close",
     value: function close() {
       // u2f have no way to clean things up
-      return Promise.resolve();
+      return _promise2.default.resolve();
     }
   }]);
-
   return TransportU2F;
 }(_Transport3.default);
 

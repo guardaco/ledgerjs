@@ -4,6 +4,34 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
 var _HttpTransport = require("./HttpTransport");
 
 var _HttpTransport2 = _interopRequireDefault(_HttpTransport);
@@ -18,22 +46,15 @@ var _hwTransport2 = _interopRequireDefault(_hwTransport);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 var getTransport = function getTransport(url) {
   return !url.startsWith("ws") ? _HttpTransport2.default : _WebSocketTransport2.default;
 };
 
+
 var inferURLs = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(urls) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(urls) {
     var r;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -59,12 +80,11 @@ var inferURLs = function () {
 
 exports.default = function (urls) {
   var StaticTransport = function (_Transport) {
-    _inherits(StaticTransport, _Transport);
+    (0, _inherits3.default)(StaticTransport, _Transport);
 
     function StaticTransport() {
-      _classCallCheck(this, StaticTransport);
-
-      return _possibleConstructorReturn(this, (StaticTransport.__proto__ || Object.getPrototypeOf(StaticTransport)).apply(this, arguments));
+      (0, _classCallCheck3.default)(this, StaticTransport);
+      return (0, _possibleConstructorReturn3.default)(this, (StaticTransport.__proto__ || (0, _getPrototypeOf2.default)(StaticTransport)).apply(this, arguments));
     }
 
     return StaticTransport;
@@ -74,7 +94,7 @@ exports.default = function (urls) {
 
   StaticTransport.list = function () {
     return inferURLs(urls).then(function (urls) {
-      return Promise.all(urls.map(function (url) {
+      return _promise2.default.all(urls.map(function (url) {
         return getTransport(url).check(url).then(function () {
           return [url];
         }).catch(function () {
@@ -96,9 +116,9 @@ exports.default = function (urls) {
 
       if (unsubscribed) return;
       inferURLs(urls).then(function (urls) {
-        return Promise.all(urls.map(function () {
-          var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(url) {
-            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _promise2.default.all(urls.map(function () {
+          var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(url) {
+            return _regenerator2.default.wrap(function _callee2$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
                   case 0:
@@ -153,7 +173,7 @@ exports.default = function (urls) {
           };
         }()));
       }).then(function () {
-        return new Promise(function (success) {
+        return new _promise2.default(function (success) {
           return setTimeout(success, 5000);
         });
       }).then(checkLoop);

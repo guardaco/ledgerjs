@@ -4,11 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _utils = require("./utils");
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /********************************************************************************
  *   Ledger Node JS API
@@ -60,14 +66,13 @@ var TX_MAX_SIZE = 1540;
 var Str = function () {
   function Str(transport) {
     var scrambleKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "l0v";
-
-    _classCallCheck(this, Str);
+    (0, _classCallCheck3.default)(this, Str);
 
     this.transport = transport;
     transport.decorateAppAPIMethods(this, ["getAppConfiguration", "getPublicKey", "signTransaction", "signHash"], scrambleKey);
   }
 
-  _createClass(Str, [{
+  (0, _createClass3.default)(Str, [{
     key: "getAppConfiguration",
     value: function getAppConfiguration() {
       return this.transport.send(CLA, INS_GET_CONF, 0x00, 0x00).then(function (response) {
@@ -272,7 +277,6 @@ var Str = function () {
       });
     }
   }]);
-
   return Str;
 }();
 

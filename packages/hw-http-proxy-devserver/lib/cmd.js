@@ -5,6 +5,26 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ips = undefined;
 
+var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _keys = require("babel-runtime/core-js/object/keys");
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _hwTransportNodeHid = require("@ledgerhq/hw-transport-node-hid");
 
 var _hwTransportNodeHid2 = _interopRequireDefault(_hwTransportNodeHid);
@@ -35,12 +55,8 @@ var _os2 = _interopRequireDefault(_os);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 var ifaces = _os2.default.networkInterfaces();
-var ips = exports.ips = Object.keys(ifaces).reduce(function (acc, ifname) {
+var ips = exports.ips = (0, _keys2.default)(ifaces).reduce(function (acc, ifname) {
   return acc.concat(ifaces[ifname].map(function (iface) {
     if ("IPv4" !== iface.family || iface.internal !== false) {
       // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
@@ -66,9 +82,9 @@ app.get("/", function (req, res) {
 
 var pending = false;
 app.post("/", _bodyParser2.default.json(), function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(req, res) {
     var data, error, transport, result;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -155,8 +171,8 @@ wss.on("connection", function (ws) {
     var destroyed = false;
 
     var onClose = function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -200,9 +216,9 @@ wss.on("connection", function (ws) {
     ws.on("close", onClose);
 
     ws.on("message", function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(apduHex) {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(apduHex) {
         var res;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -224,7 +240,7 @@ wss.on("connection", function (ws) {
                   break;
                 }
 
-                ws.send(JSON.stringify({
+                ws.send((0, _stringify2.default)({
                   error: "WebSocket is busy (previous session not closed)"
                 }));
                 ws.close();
@@ -247,7 +263,7 @@ wss.on("connection", function (ws) {
                   return ws.close();
                 });
                 console.log("WS(" + index + "): opened!");
-                ws.send(JSON.stringify({ type: "opened" }));
+                ws.send((0, _stringify2.default)({ type: "opened" }));
                 _context3.next = 25;
                 break;
 
@@ -256,7 +272,7 @@ wss.on("connection", function (ws) {
                 _context3.t0 = _context3["catch"](11);
 
                 console.log("WS(" + index + "): open failed! " + _context3.t0);
-                ws.send(JSON.stringify({
+                ws.send((0, _stringify2.default)({
                   error: _context3.t0.message
                 }));
                 ws.close();
@@ -300,7 +316,7 @@ wss.on("connection", function (ws) {
                 return _context3.abrupt("return");
 
               case 39:
-                ws.send(JSON.stringify({ type: "response", data: res.toString("hex") }));
+                ws.send((0, _stringify2.default)({ type: "response", data: res.toString("hex") }));
                 _context3.next = 48;
                 break;
 
@@ -318,7 +334,7 @@ wss.on("connection", function (ws) {
                 return _context3.abrupt("return");
 
               case 47:
-                ws.send(JSON.stringify({ type: "error", error: _context3.t1.message }));
+                ws.send((0, _stringify2.default)({ type: "error", error: _context3.t1.message }));
 
               case 48:
               case "end":
@@ -337,7 +353,7 @@ wss.on("connection", function (ws) {
   }
 });
 
-console.log("DEBUG_COMM_HTTP_PROXY=" + ["localhost"].concat(_toConsumableArray(ips)).map(function (ip) {
+console.log("DEBUG_COMM_HTTP_PROXY=" + ["localhost"].concat((0, _toConsumableArray3.default)(ips)).map(function (ip) {
   return "ws://" + ip + ":" + PORT;
 }).join("|"));
 

@@ -3,6 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
 exports.splitPath = splitPath;
 exports.foreach = foreach;
 exports.crc16xmodem = crc16xmodem;
@@ -67,7 +72,7 @@ function foreach(arr, callback) {
       });
     }
   }
-  return Promise.resolve().then(function () {
+  return _promise2.default.resolve().then(function () {
     return iterate(0, arr, []);
   });
 }

@@ -5,7 +5,41 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.StatusCodes = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _assign = require("babel-runtime/core-js/object/assign");
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _keys = require("babel-runtime/core-js/object/keys");
+
+var _keys2 = _interopRequireDefault(_keys);
 
 exports.getAltStatusMessage = getAltStatusMessage;
 exports.TransportError = TransportError;
@@ -16,12 +50,6 @@ var _events2 = require("events");
 var _events3 = _interopRequireDefault(_events2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * all possible status codes.
@@ -115,7 +143,7 @@ TransportError.prototype = new Error();
  */
 function TransportStatusError(statusCode) {
   this.name = "TransportStatusError";
-  var statusText = Object.keys(StatusCodes).find(function (k) {
+  var statusText = (0, _keys2.default)(StatusCodes).find(function (k) {
     return StatusCodes[k] === statusCode;
   }) || "UNKNOWN_ERROR";
   var smsg = getAltStatusMessage(statusCode) || statusText;
@@ -138,18 +166,17 @@ var Transport = function () {
   function Transport() {
     var _this = this;
 
-    _classCallCheck(this, Transport);
-
+    (0, _classCallCheck3.default)(this, Transport);
     this.debug = global.__ledgerDebug || null;
     this.exchangeTimeout = 30000;
     this._events = new _events3.default();
 
     this.send = function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(cla, ins, p1, p2) {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(cla, ins, p1, p2) {
         var data = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : Buffer.alloc(0);
         var statusList = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : [StatusCodes.OK];
         var response, sw;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -263,7 +290,7 @@ var Transport = function () {
    */
 
 
-  _createClass(Transport, [{
+  (0, _createClass3.default)(Transport, [{
     key: "on",
 
 
@@ -294,7 +321,7 @@ var Transport = function () {
         args[_key - 1] = arguments[_key];
       }
 
-      (_events = this._events).emit.apply(_events, [event].concat(_toConsumableArray(args)));
+      (_events = this._events).emit.apply(_events, [event].concat((0, _toConsumableArray3.default)(args)));
     }
 
     /**
@@ -338,7 +365,7 @@ var Transport = function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = methods[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = (0, _getIterator3.default)(methods), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var methodName = _step.value;
 
           self[methodName] = this.decorateAppAPIMethod(methodName, self[methodName], self, scrambleKey);
@@ -364,14 +391,14 @@ var Transport = function () {
       var _this2 = this;
 
       return function () {
-        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
           for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
           }
 
           var _appAPIlock, _e;
 
-          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          return _regenerator2.default.wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
@@ -384,11 +411,11 @@ var Transport = function () {
 
                   _e = new TransportError("Ledger Device is busy (lock " + _appAPIlock + ")", "TransportLocked");
 
-                  Object.assign(_e, {
+                  (0, _assign2.default)(_e, {
                     currentLock: _appAPIlock,
                     methodName: methodName
                   });
-                  return _context2.abrupt("return", Promise.reject(_e));
+                  return _context2.abrupt("return", _promise2.default.reject(_e));
 
                 case 5:
                   _context2.prev = 5;
@@ -437,7 +464,7 @@ var Transport = function () {
       var openTimeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3000;
       var listenTimeout = arguments[1];
 
-      return new Promise(function (resolve, reject) {
+      return new _promise2.default(function (resolve, reject) {
         var found = false;
         var sub = _this3.listen({
           next: function next(e) {
@@ -464,7 +491,6 @@ var Transport = function () {
       });
     }
   }]);
-
   return Transport;
 }();
 
