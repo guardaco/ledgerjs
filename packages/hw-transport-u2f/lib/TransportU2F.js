@@ -42,16 +42,16 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _u2fApi = require("u2f-api");
 
-var _lib = require("../../hw-transport/lib");
+var _Transport2 = require("../../hw-transport/lib/Transport");
 
-var _lib2 = _interopRequireDefault(_lib);
+var _Transport3 = _interopRequireDefault(_Transport2);
 
-var _lib3 = require("../../errors/lib");
+var _lib = require("../../errors/lib");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function wrapU2FTransportError(originalError, message, id) {
-  var err = new _lib3.TransportError(message, id);
+  var err = new _lib.TransportError(message, id);
   // $FlowFixMe
   err.originalError = originalError;
   return err;
@@ -265,7 +265,7 @@ var TransportU2F = function (_Transport) {
     }
   }]);
   return TransportU2F;
-}(_lib2.default);
+}(_Transport3.default);
 
 TransportU2F.isSupported = _u2fApi.isSupported;
 
@@ -286,7 +286,7 @@ TransportU2F.listen = function (observer) {
       observer.next({ type: "add", descriptor: null });
       observer.complete();
     } else {
-      observer.error(new _lib3.TransportError("U2F browser support is needed for Ledger. " + "Please use Chrome, Opera or Firefox with a U2F extension. " + "Also make sure you're on an HTTPS connection", "U2FNotSupported"));
+      observer.error(new _lib.TransportError("U2F browser support is needed for Ledger. " + "Please use Chrome, Opera or Firefox with a U2F extension. " + "Also make sure you're on an HTTPS connection", "U2FNotSupported"));
     }
   });
   return {

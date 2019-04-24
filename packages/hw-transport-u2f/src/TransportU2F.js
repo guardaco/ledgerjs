@@ -1,7 +1,7 @@
 //@flow
 
 import { sign, isSupported } from "u2f-api";
-import Transport from "../../hw-transport/lib";
+import Transport from "../../hw-transport/lib/Transport";
 import { TransportError } from "../../errors/lib";
 
 function wrapU2FTransportError(originalError, message, id) {

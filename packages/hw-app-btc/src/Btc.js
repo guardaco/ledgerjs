@@ -5,7 +5,7 @@
 // - try to avoid every place we do hex<>Buffer conversion. also accept Buffer as func parameters (could accept both a string or a Buffer in the API)
 // - there are redundant code across apps (see Eth vs Btc). we might want to factorize it somewhere. also each app apdu call should be abstracted it out as an api
 import { foreach, doIf, asyncWhile, splitPath, eachSeries } from "./utils";
-import type Transport from "../../hw-transport/lib";
+import type Transport from "../../hw-transport/lib/Transport";
 import createHash from "create-hash";
 
 /**
