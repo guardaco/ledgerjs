@@ -14,7 +14,35 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _utils = require("./utils");
 
+var _lib = require("../../errors/lib");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/********************************************************************************
+ *   Ledger Node JS API
+ *   (c) 2016-2017 Ledger
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
+
+
+// FIXME drop:
+var remapTransactionRelatedErrors = function remapTransactionRelatedErrors(e) {
+  if (e && e.statusCode === 0x6a80) {
+    return new _lib.EthAppPleaseEnableContractData("Please enable Contract data on the Ethereum app Settings");
+  }
+  return e;
+};
 
 /**
  * Ethereum API
@@ -23,13 +51,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * import Eth from "@ledgerhq/hw-app-eth";
  * const eth = new Eth(transport)
  */
+
 var Eth = function () {
   function Eth(transport) {
     var scrambleKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "w0w";
     (0, _classCallCheck3.default)(this, Eth);
 
     this.transport = transport;
-    transport.decorateAppAPIMethods(this, ["getAddress", "signTransaction", "signPersonalMessage", "getAppConfiguration"], scrambleKey);
+    transport.decorateAppAPIMethods(this, ["getAddress", "provideERC20TokenInformation", "signTransaction", "signPersonalMessage", "getAppConfiguration"], scrambleKey);
   }
 
   /**
@@ -62,6 +91,39 @@ var Eth = function () {
           result.chainCode = response.slice(1 + publicKeyLength + 1 + addressLength, 1 + publicKeyLength + 1 + addressLength + 32).toString("hex");
         }
         return result;
+      });
+    }
+
+    /**
+     * This commands provides a trusted description of an ERC 20 token
+     * to associate a contract address with a ticker and number of decimals.
+     *
+     * It shall be run immediately before performing a transaction involving a contract
+     * calling this contract address to display the proper token information to the user if necessary.
+     *
+     * @param {*} info: a blob from "erc20.js" utilities that contains all token information.
+     *
+     * @example
+     * import { byContractAddress } from "@ledgerhq/hw-app-eth/erc20"
+     * const zrxInfo = byContractAddress("0xe41d2489571d322189246dafa5ebde1f4699f498")
+     * if (zrxInfo) await appEth.provideERC20TokenInformation(zrxInfo)
+     * const signed = await appEth.signTransaction(path, rawTxHex)
+     */
+
+  }, {
+    key: "provideERC20TokenInformation",
+    value: function provideERC20TokenInformation(_ref) {
+      var data = _ref.data;
+
+      return this.transport.send(0xe0, 0x0a, 0x00, 0x00, data).then(function () {
+        return true;
+      }, function (e) {
+        if (e && e.statusCode === 0x6d00) {
+          // this case happen for older version of ETH app, since older app version had the ERC20 data hardcoded, it's fine to assume it worked.
+          // we return a flag to know if the call was effective or not
+          return false;
+        }
+        throw e;
       });
     }
 
@@ -111,6 +173,8 @@ var Eth = function () {
         var r = response.slice(1, 1 + 32).toString("hex");
         var s = response.slice(1 + 32, 1 + 32 + 32).toString("hex");
         return { v: v, r: r, s: s };
+      }, function (e) {
+        throw remapTransactionRelatedErrors(e);
       });
     }
 
@@ -186,25 +250,6 @@ var Eth = function () {
     }
   }]);
   return Eth;
-}(); /********************************************************************************
-      *   Ledger Node JS API
-      *   (c) 2016-2017 Ledger
-      *
-      *  Licensed under the Apache License, Version 2.0 (the "License");
-      *  you may not use this file except in compliance with the License.
-      *  You may obtain a copy of the License at
-      *
-      *      http://www.apache.org/licenses/LICENSE-2.0
-      *
-      *  Unless required by applicable law or agreed to in writing, software
-      *  distributed under the License is distributed on an "AS IS" BASIS,
-      *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-      *  See the License for the specific language governing permissions and
-      *  limitations under the License.
-      ********************************************************************************/
-
-
-// FIXME drop:
-
+}();
 
 exports.default = Eth;

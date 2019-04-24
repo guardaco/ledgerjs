@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = require("babel-runtime/helpers/extends");
-
-var _extends3 = _interopRequireDefault(_extends2);
-
 var _assign = require("babel-runtime/core-js/object/assign");
 
 var _assign2 = _interopRequireDefault(_assign);
@@ -19,6 +15,10 @@ var _regenerator2 = _interopRequireDefault(_regenerator);
 var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _extends2 = require("babel-runtime/helpers/extends");
+
+var _extends3 = _interopRequireDefault(_extends2);
 
 var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
@@ -36,10 +36,21 @@ var _createHash2 = _interopRequireDefault(_createHash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * address format is one of legacy | p2sh | bech32
+ */
+
+
 // TODO future refactoring
 // - drop utils.js & refactoring with async/await style
 // - try to avoid every place we do hex<>Buffer conversion. also accept Buffer as func parameters (could accept both a string or a Buffer in the API)
 // - there are redundant code across apps (see Eth vs Btc). we might want to factorize it somewhere. also each app apdu call should be abstracted it out as an api
+var addressFormatMap = {
+  legacy: 0,
+  p2sh: 1,
+  bech32: 2
+};
+
 var MAX_SCRIPT_BLOCK = 50;
 var DEFAULT_VERSION = 1;
 var DEFAULT_LOCKTIME = 0;
@@ -74,16 +85,22 @@ var Btc = function () {
     }
   }, {
     key: "getWalletPublicKey_private",
-    value: function getWalletPublicKey_private(path, verify, segwit) {
+    value: function getWalletPublicKey_private(path) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var _verify$format$option = (0, _extends3.default)({
+        verify: false,
+        format: "legacy"
+      }, options),
+          verify = _verify$format$option.verify,
+          format = _verify$format$option.format;
+
+      if (!(format in addressFormatMap)) {
+        throw new Error("btc.getWalletPublicKey invalid format=" + format);
+      }
       var paths = (0, _utils.splitPath)(path);
-      var p1 = 0x00;
-      var p2 = 0x00;
-      if (verify === true) {
-        p1 = 0x01;
-      }
-      if (segwit == true) {
-        p2 = 0x01;
-      }
+      var p1 = verify ? 1 : 0;
+      var p2 = addressFormatMap[format];
       var buffer = Buffer.alloc(1 + paths.length * 4);
       buffer[0] = paths.length;
       paths.forEach(function (element, index) {
@@ -101,18 +118,39 @@ var Btc = function () {
 
     /**
      * @param path a BIP 32 path
-     * @param segwit use segwit
+     * @param options an object with optional these fields:
+     *
+     * - verify (boolean) will ask user to confirm the address on the device
+     *
+     * - format ("legacy" | "p2sh" | "bech32") to use different bitcoin address formatter.
+     *
+     * NB The normal usage is to use:
+     *
+     * - legacy format with 44' paths
+     *
+     * - p2sh format with 49' paths
+     *
+     * - bech32 format with 173' paths
+     *
      * @example
-     * btc.getWalletPublicKey("44'/0'/0'/0").then(o => o.bitcoinAddress)
+     * btc.getWalletPublicKey("44'/0'/0'/0/0").then(o => o.bitcoinAddress)
+     * btc.getWalletPublicKey("49'/0'/0'/0/0", { format: "p2sh" }).then(o => o.bitcoinAddress)
      */
 
   }, {
     key: "getWalletPublicKey",
-    value: function getWalletPublicKey(path) {
-      var verify = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var segwit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-      return this.getWalletPublicKey_private(path, verify, segwit);
+    value: function getWalletPublicKey(path, opts) {
+      var options = void 0;
+      if (arguments.length > 2 || typeof opts === "boolean") {
+        console.warn("btc.getWalletPublicKey deprecated signature used. Please switch to getWalletPublicKey(path, { format, verify })");
+        options = {
+          verify: !!opts,
+          format: arguments[2] ? "p2sh" : "legacy"
+        };
+      } else {
+        options = opts || {};
+      }
+      return this.getWalletPublicKey_private(path, options);
     }
   }, {
     key: "getTrustedInputRaw",
@@ -175,8 +213,8 @@ var Btc = function () {
 
       var processInputs = function processInputs() {
         return (0, _utils.eachSeries)(inputs, function (input) {
-          var data = Buffer.concat([input.prevout, isDecred ? Buffer.from([0x00]) : Buffer.alloc(0), //tree
-          _this.createVarint(input.script.length)]);
+          var treeField = isDecred ? input.tree || Buffer.from([0x00]) : Buffer.alloc(0);
+          var data = Buffer.concat([input.prevout, treeField, _this.createVarint(input.script.length)]);
           return _this.getTrustedInputRaw(data).then(function () {
             // iteration (eachSeries) ended
             // TODO notify progress
@@ -281,7 +319,7 @@ var Btc = function () {
         }, _callee, this);
       }));
 
-      function getTrustedInputBIP143(_x5, _x6) {
+      function getTrustedInputBIP143(_x4, _x5) {
         return _ref.apply(this, arguments);
       }
 
@@ -607,7 +645,7 @@ var Btc = function () {
           return (
             // Collect public keys
             (0, _utils.foreach)(inputs, function (input, i) {
-              return _this5.getWalletPublicKey_private(associatedKeysets[i], false, false);
+              return _this5.getWalletPublicKey_private(associatedKeysets[i]);
             }).then(function (result) {
               for (var index = 0; index < result.length; index++) {
                 publicKeys.push(_this5.compressPublicKey(Buffer.from(result[index].publicKey, "hex")));
@@ -636,7 +674,10 @@ var Btc = function () {
         });
       }).then(function () {
         return (0, _utils.doIf)(!!expiryHeight && !isDecred, function () {
-          return _this5.signTransaction("", undefined, SIGHASH_ALL, expiryHeight);
+          return (
+            // FIXME: I think we should always pass lockTime here.
+            _this5.signTransaction("", lockTime, SIGHASH_ALL, expiryHeight)
+          );
         });
       }).then(function () {
         return (
@@ -700,11 +741,16 @@ var Btc = function () {
           }
           result = Buffer.concat([result, witness]);
         }
+
+        // FIXME: In ZEC or KMD sapling lockTime is serialized before expiryHeight.
+        // expiryHeight is used only in overwinter/sapling so I moved lockTimeBuffer here
+        // and it should not break other coins because expiryHeight is false for them.
+        // Don't know about Decred though.
+        result = Buffer.concat([result, lockTimeBuffer]);
+
         if (expiryHeight) {
           result = Buffer.concat([result, targetTransaction.nExpiryHeight || Buffer.alloc(0), targetTransaction.extraData || Buffer.alloc(0)]);
         }
-
-        result = Buffer.concat([result, lockTimeBuffer]);
 
         if (isDecred) {
           var decredWitness = Buffer.from([targetTransaction.inputs.length]);
@@ -915,13 +961,23 @@ var Btc = function () {
       for (var i = 0; i < numberInputs; i++) {
         var _prevout = transaction.slice(offset, offset + 36);
         offset += 36;
-        varint = this.getVarint(transaction, offset);
-        offset += varint[1];
-        var _script = transaction.slice(offset, offset + varint[0]);
-        offset += varint[0];
+        var _script = Buffer.alloc(0);
+        var _tree = Buffer.alloc(0);
+        //No script for decred, it has a witness
+        if (!isDecred) {
+          varint = this.getVarint(transaction, offset);
+          offset += varint[1];
+          _script = transaction.slice(offset, offset + varint[0]);
+          offset += varint[0];
+        } else {
+          //Tree field
+          _tree = transaction.slice(offset, offset + 1);
+          offset += 1;
+        }
+
         var _sequence3 = transaction.slice(offset, offset + 4);
         offset += 4;
-        inputs.push({ prevout: _prevout, script: _script, sequence: _sequence3 });
+        inputs.push({ prevout: _prevout, script: _script, sequence: _sequence3, tree: _tree });
       }
       varint = this.getVarint(transaction, offset);
       var numberOutputs = varint[0];
@@ -956,6 +1012,29 @@ var Btc = function () {
       }
       if (hasExtraData) {
         extraData = transaction.slice(offset);
+      }
+
+      //Get witnesses for Decred
+      if (isDecred) {
+        varint = this.getVarint(transaction, offset);
+        offset += varint[1];
+        if (varint[0] !== numberInputs) {
+          throw new Error("splitTransaction: incoherent number of witnesses");
+        }
+        for (var _i3 = 0; _i3 < numberInputs; _i3++) {
+          //amount
+          offset += 8;
+          //block height
+          offset += 4;
+          //block index
+          offset += 4;
+          //Script size
+          varint = this.getVarint(transaction, offset);
+          offset += varint[1];
+          var _script3 = transaction.slice(offset, offset + varint[0]);
+          offset += varint[0];
+          inputs[_i3].script = _script3;
+        }
       }
 
       return {

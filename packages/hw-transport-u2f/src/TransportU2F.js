@@ -1,7 +1,8 @@
 //@flow
 
 import { sign, isSupported } from "u2f-api";
-import Transport, { TransportError } from "../../hw-transport/lib/Transport";
+import Transport from "../../hw-transport/lib";
+import { TransportError } from "../../errors/lib";
 
 function wrapU2FTransportError(originalError, message, id) {
   const err = new TransportError(message, id);
@@ -92,10 +93,14 @@ function isTimeoutU2FError(u2fError) {
 export default class TransportU2F extends Transport<null> {
   static isSupported = isSupported;
 
-  // this transport is not discoverable but we are going to guess if it is here with isSupported()
+  /*
+   */
   static list = (): * =>
+    // this transport is not discoverable but we are going to guess if it is here with isSupported()
     isSupported().then(supported => (supported ? [null] : []));
 
+  /*
+   */
   static listen = (observer: *) => {
     let unsubscribed = false;
     isSupported().then(supported => {
@@ -167,6 +172,11 @@ export default class TransportU2F extends Transport<null> {
     transportInstances.push(this);
   }
 
+  /**
+   * Exchange with the device using APDU protocol.
+   * @param apdu
+   * @returns a promise of apdu response
+   */
   async exchange(apdu: Buffer): Promise<Buffer> {
     try {
       return await attemptExchange(
@@ -194,10 +204,14 @@ export default class TransportU2F extends Transport<null> {
     }
   }
 
+  /**
+   */
   setScrambleKey(scrambleKey: string) {
     this.scrambleKey = Buffer.from(scrambleKey, "ascii");
   }
 
+  /**
+   */
   setUnwrap(unwrap: boolean) {
     this.unwrap = unwrap;
   }

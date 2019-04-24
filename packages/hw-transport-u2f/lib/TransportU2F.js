@@ -42,14 +42,16 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _u2fApi = require("u2f-api");
 
-var _Transport2 = require("../../hw-transport/lib/Transport");
+var _lib = require("../../hw-transport/lib");
 
-var _Transport3 = _interopRequireDefault(_Transport2);
+var _lib2 = _interopRequireDefault(_lib);
+
+var _lib3 = require("../../errors/lib");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function wrapU2FTransportError(originalError, message, id) {
-  var err = new _Transport2.TransportError(message, id);
+  var err = new _lib3.TransportError(message, id);
   // $FlowFixMe
   err.originalError = originalError;
   return err;
@@ -138,7 +140,8 @@ var TransportU2F = function (_Transport) {
      */
 
 
-    // this transport is not discoverable but we are going to guess if it is here with isSupported()
+    /*
+     */
     value: function () {
       var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_) {
         var _openTimeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
@@ -163,6 +166,10 @@ var TransportU2F = function (_Transport) {
 
       return open;
     }()
+
+    /*
+     */
+
   }]);
 
   function TransportU2F() {
@@ -175,6 +182,13 @@ var TransportU2F = function (_Transport) {
     transportInstances.push(_this);
     return _this;
   }
+
+  /**
+   * Exchange with the device using APDU protocol.
+   * @param apdu
+   * @returns a promise of apdu response
+   */
+
 
   (0, _createClass3.default)(TransportU2F, [{
     key: "exchange",
@@ -225,11 +239,19 @@ var TransportU2F = function (_Transport) {
 
       return exchange;
     }()
+
+    /**
+     */
+
   }, {
     key: "setScrambleKey",
     value: function setScrambleKey(scrambleKey) {
       this.scrambleKey = Buffer.from(scrambleKey, "ascii");
     }
+
+    /**
+     */
+
   }, {
     key: "setUnwrap",
     value: function setUnwrap(unwrap) {
@@ -243,14 +265,17 @@ var TransportU2F = function (_Transport) {
     }
   }]);
   return TransportU2F;
-}(_Transport3.default);
+}(_lib2.default);
 
 TransportU2F.isSupported = _u2fApi.isSupported;
 
 TransportU2F.list = function () {
-  return (0, _u2fApi.isSupported)().then(function (supported) {
-    return supported ? [null] : [];
-  });
+  return (
+    // this transport is not discoverable but we are going to guess if it is here with isSupported()
+    (0, _u2fApi.isSupported)().then(function (supported) {
+      return supported ? [null] : [];
+    })
+  );
 };
 
 TransportU2F.listen = function (observer) {
@@ -261,7 +286,7 @@ TransportU2F.listen = function (observer) {
       observer.next({ type: "add", descriptor: null });
       observer.complete();
     } else {
-      observer.error(new _Transport2.TransportError("U2F browser support is needed for Ledger. " + "Please use Chrome, Opera or Firefox with a U2F extension. " + "Also make sure you're on an HTTPS connection", "U2FNotSupported"));
+      observer.error(new _lib3.TransportError("U2F browser support is needed for Ledger. " + "Please use Chrome, Opera or Firefox with a U2F extension. " + "Also make sure you're on an HTTPS connection", "U2FNotSupported"));
     }
   });
   return {
