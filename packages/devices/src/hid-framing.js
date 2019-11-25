@@ -1,6 +1,6 @@
 // @flow
 
-import { TransportError } from "../../hw-transport/lib/Transport";
+import { TransportError } from "../../errors/lib";
 
 export type ResponseAcc = ?{
   data: Buffer,
@@ -22,7 +22,10 @@ const initialAcc = {
   sequence: 0
 };
 
-export default (channel: number, packetSize: number) => {
+/**
+ *
+ */
+const createHIDframing = (channel: number, packetSize: number) => {
   return {
     makeBlocks(apdu: Buffer): Buffer[] {
       let data = Buffer.concat([asUInt16BE(apdu.length), apdu]);
@@ -82,3 +85,5 @@ export default (channel: number, packetSize: number) => {
     }
   };
 };
+
+export default createHIDframing;

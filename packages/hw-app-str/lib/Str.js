@@ -90,7 +90,8 @@ var Str = function () {
      * @param path a path in BIP 32 format
      * @option boolValidate optionally enable key pair validation
      * @option boolDisplay optionally enable or not the display
-     * @return an object with the publicKey
+     * @return an object with the publicKey (using XLM public key format) and
+     * the raw ed25519 public key.
      * @example
      * str.getPublicKey("44'/148'/0'").then(o => o.publicKey)
      */
@@ -136,7 +137,8 @@ var Str = function () {
           }
         }
         return {
-          publicKey: publicKey
+          publicKey: publicKey,
+          raw: rawPublicKey
         };
       });
     }

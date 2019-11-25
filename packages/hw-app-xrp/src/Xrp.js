@@ -1,6 +1,6 @@
 //@flow
 
-import type Transport from "@ledgerhq/hw-transport";
+import type Transport from "../../hw-transport/lib";
 import BIPPath from "bip32-path";
 
 /**

@@ -1,35 +1,30 @@
 // @flow
+import { ledgerUSBVendorId } from "../../devices/lib";
 
-const ledgerDevices = [
-  { vendorId: 0x2581, productId: 0x3b7c },
-  { vendorId: 0x2c97 }
-];
+const ledgerDevices = [{ vendorId: ledgerUSBVendorId }];
 
-const isLedgerDevice = device =>
-  ledgerDevices.some(
-    info =>
-      (!info.productId || info.productId === device.productId) &&
-      (!info.vendorId || info.vendorId === device.vendorId)
-  );
+export async function requestLedgerDevice(): Promise<USBDevice> {
+  // $FlowFixMe
+  const device = await navigator.usb.requestDevice({ filters: ledgerDevices });
+  return device;
+}
 
-export function requestLedgerDevice(): Promise<USBDevice> {
-  return Promise.resolve().then(() =>
-    // $FlowFixMe
-    navigator.usb.requestDevice({ filters: ledgerDevices })
-  );
+export async function getLedgerDevices(): Promise<USBDevice[]> {
+  // $FlowFixMe
+  const devices = await navigator.usb.getDevices();
+  return devices.filter(d => d.vendorId === ledgerUSBVendorId);
+}
+
+export async function getFirstLedgerDevice(): Promise<USBDevice> {
+  const existingDevices = await getLedgerDevices();
+  if (existingDevices.length > 0) return existingDevices[0];
+  return requestLedgerDevice();
 }
 
 export const isSupported = (): Promise<boolean> =>
   Promise.resolve(
-    typeof navigator === "object" &&
+    !!navigator &&
       // $FlowFixMe
-      typeof navigator.usb === "object"
+      !!navigator.usb &&
+      typeof navigator.usb.getDevices === "function"
   );
-
-export const getLedgerDevices = (): Promise<USBDevice[]> =>
-  Promise.resolve()
-    .then(() =>
-      // $FlowFixMe
-      navigator.usb.getDevices()
-    )
-    .then(devices => devices.filter(isLedgerDevice));

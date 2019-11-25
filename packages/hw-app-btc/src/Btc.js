@@ -5,8 +5,19 @@
 // - try to avoid every place we do hex<>Buffer conversion. also accept Buffer as func parameters (could accept both a string or a Buffer in the API)
 // - there are redundant code across apps (see Eth vs Btc). we might want to factorize it somewhere. also each app apdu call should be abstracted it out as an api
 import { foreach, doIf, asyncWhile, splitPath, eachSeries } from "./utils";
-import type Transport from "@ledgerhq/hw-transport";
+import type Transport from "../../hw-transport/lib";
 import createHash from "create-hash";
+
+/**
+ * address format is one of legacy | p2sh | bech32
+ */
+export type AddressFormat = "legacy" | "p2sh" | "bech32";
+
+const addressFormatMap = {
+  legacy: 0,
+  p2sh: 1,
+  bech32: 2
+};
 
 const MAX_SCRIPT_BLOCK = 50;
 const DEFAULT_VERSION = 1;
@@ -54,22 +65,26 @@ export default class Btc {
 
   getWalletPublicKey_private(
     path: string,
-    verify: boolean,
-    segwit: boolean
+    options: {
+      verify?: boolean,
+      format?: AddressFormat
+    } = {}
   ): Promise<{
     publicKey: string,
     bitcoinAddress: string,
     chainCode: string
   }> {
+    const { verify, format } = {
+      verify: false,
+      format: "legacy",
+      ...options
+    };
+    if (!(format in addressFormatMap)) {
+      throw new Error("btc.getWalletPublicKey invalid format=" + format);
+    }
     const paths = splitPath(path);
-    var p1 = 0x00;
-    var p2 = 0x00;
-    if (verify === true) {
-      p1 = 0x01;
-    }
-    if (segwit == true) {
-      p2 = 0x01;
-    }
+    var p1 = verify ? 1 : 0;
+    var p2 = addressFormatMap[format];
     const buffer = Buffer.alloc(1 + paths.length * 4);
     buffer[0] = paths.length;
     paths.forEach((element, index) => {
@@ -94,20 +109,50 @@ export default class Btc {
 
   /**
    * @param path a BIP 32 path
-   * @param segwit use segwit
+   * @param options an object with optional these fields:
+   *
+   * - verify (boolean) will ask user to confirm the address on the device
+   *
+   * - format ("legacy" | "p2sh" | "bech32") to use different bitcoin address formatter.
+   *
+   * NB The normal usage is to use:
+   *
+   * - legacy format with 44' paths
+   *
+   * - p2sh format with 49' paths
+   *
+   * - bech32 format with 173' paths
+   *
    * @example
-   * btc.getWalletPublicKey("44'/0'/0'/0").then(o => o.bitcoinAddress)
+   * btc.getWalletPublicKey("44'/0'/0'/0/0").then(o => o.bitcoinAddress)
+   * btc.getWalletPublicKey("49'/0'/0'/0/0", { format: "p2sh" }).then(o => o.bitcoinAddress)
    */
   getWalletPublicKey(
     path: string,
-    verify?: boolean = false,
-    segwit?: boolean = false
+    opts?:
+      | boolean
+      | {
+          verify?: boolean,
+          format?: AddressFormat
+        }
   ): Promise<{
     publicKey: string,
     bitcoinAddress: string,
     chainCode: string
   }> {
-    return this.getWalletPublicKey_private(path, verify, segwit);
+    let options;
+    if (arguments.length > 2 || typeof opts === "boolean") {
+      console.warn(
+        "btc.getWalletPublicKey deprecated signature used. Please switch to getWalletPublicKey(path, { format, verify })"
+      );
+      options = {
+        verify: !!opts,
+        format: arguments[2] ? "p2sh" : "legacy"
+      };
+    } else {
+      options = opts || {};
+    }
+    return this.getWalletPublicKey_private(path, options);
   }
 
   getTrustedInputRaw(
@@ -139,11 +184,12 @@ export default class Btc {
     transaction: Transaction,
     additionals: Array<string> = []
   ): Promise<string> {
-    const { inputs, outputs, locktime } = transaction;
+    const { version, inputs, outputs, locktime } = transaction;
     if (!outputs || !locktime) {
       throw new Error("getTrustedInput: locktime & outputs is expected");
     }
     const isDecred = additionals.includes("decred");
+    const isXST = additionals.includes("stealthcoin");
     const processScriptBlocks = (script, sequence) => {
       const scriptBlocks = [];
       let offset = 0;
@@ -173,22 +219,32 @@ export default class Btc {
       );
     };
 
-    const processWholeScriptBlock = (script, sequence) =>
-      this.getTrustedInputRaw(Buffer.concat([script, sequence]));
+    const processWholeScriptBlock = block => this.getTrustedInputRaw(block);
 
     const processInputs = () => {
       return eachSeries(inputs, input => {
+        const isXSTV2 =
+          isXST &&
+          Buffer.compare(version, Buffer.from([0x02, 0x00, 0x00, 0x00])) === 0;
+        const treeField = isDecred
+          ? input.tree || Buffer.from([0x00])
+          : Buffer.alloc(0);
         const data = Buffer.concat([
           input.prevout,
-          isDecred ? Buffer.from([0x00]) : Buffer.alloc(0), //tree
-          this.createVarint(input.script.length)
+          treeField,
+          isXSTV2 ? Buffer.from([0x00]) : this.createVarint(input.script.length)
         ]);
         return this.getTrustedInputRaw(data).then(() => {
           // iteration (eachSeries) ended
           // TODO notify progress
           // deferred.notify("input");
+          // Reference: https://github.com/StealthSend/Stealth/commit/5be35d6c2c500b32ed82e5d6913d66d18a4b0a7f#diff-e8db9b851adc2422aadfffca88f14c91R566
           return isDecred
-            ? processWholeScriptBlock(input.script, input.sequence)
+            ? processWholeScriptBlock(
+                Buffer.concat([input.script, input.sequence])
+              )
+            : isXSTV2
+            ? processWholeScriptBlock(input.sequence)
             : processScriptBlocks(input.script, input.sequence);
         });
       }).then(() => {
@@ -292,8 +348,8 @@ export default class Btc {
       ? additionals.includes("sapling")
         ? 0x05
         : overwinter
-          ? 0x04
-          : 0x02
+        ? 0x04
+        : 0x02
       : 0x00;
     return this.transport.send(
       0xe0,
@@ -564,6 +620,8 @@ export default class Btc {
    * @param segwit is an optional boolean indicating wether to use segwit or not
    * @param initialTimestamp is an optional timestamp of the function call to use for coins that necessitate timestamps only, (not the one that the tx will include)
    * @param additionals list of additionnal options
+   *
+   * - "bech32" for spending native segwit outputs
    * - "abc" for bch
    * - "gold" for btg
    * - "bipxxx" for using BIPxxx
@@ -591,9 +649,11 @@ btc.createPaymentTransactionNew(
     expiryHeight?: Buffer
   ) {
     const isDecred = additionals.includes("decred");
+    const isXST = additionals.includes("stealthcoin");
     const hasTimestamp = initialTimestamp !== undefined;
     let startTime = Date.now();
     const sapling = additionals.includes("sapling");
+    const bech32 = segwit && additionals.includes("bech32");
     let useBip143 =
       segwit ||
       (!!additionals &&
@@ -608,7 +668,9 @@ btc.createPaymentTransactionNew(
     const defaultVersion = Buffer.alloc(4);
     !!expiryHeight && !isDecred
       ? defaultVersion.writeUInt32LE(sapling ? 0x80000004 : 0x80000003, 0)
-      : defaultVersion.writeUInt32LE(1, 0);
+      : isXST
+      ? defaultVersion.writeUInt32LE(2, 0)
+      : defaultVersion.writeUInt32LE(1, 0); // Default version to 2 for XST not to have timestamp
     const trustedInputs: Array<*> = [];
     const regularOutputs: Array<TransactionOutput> = [];
     const signatures = [];
@@ -701,7 +763,7 @@ btc.createPaymentTransactionNew(
         doIf(!resuming, () =>
           // Collect public keys
           foreach(inputs, (input, i) =>
-            this.getWalletPublicKey_private(associatedKeysets[i], false, false)
+            this.getWalletPublicKey_private(associatedKeysets[i])
           ).then(result => {
             for (let index = 0; index < result.length; index++) {
               publicKeys.push(
@@ -742,7 +804,8 @@ btc.createPaymentTransactionNew(
       )
       .then(() =>
         doIf(!!expiryHeight && !isDecred, () =>
-          this.signTransaction("", undefined, SIGHASH_ALL, expiryHeight)
+          // FIXME: I think we should always pass lockTime here.
+          this.signTransaction("", lockTime, SIGHASH_ALL, expiryHeight)
         )
       )
       .then(() =>
@@ -752,12 +815,12 @@ btc.createPaymentTransactionNew(
             inputs[i].length >= 3 && typeof inputs[i][2] === "string"
               ? Buffer.from(inputs[i][2], "hex")
               : !segwit
-                ? regularOutputs[i].script
-                : Buffer.concat([
-                    Buffer.from([OP_DUP, OP_HASH160, HASH_SIZE]),
-                    this.hashPublicKey(publicKeys[i]),
-                    Buffer.from([OP_EQUALVERIFY, OP_CHECKSIG])
-                  ]);
+              ? regularOutputs[i].script
+              : Buffer.concat([
+                  Buffer.from([OP_DUP, OP_HASH160, HASH_SIZE]),
+                  this.hashPublicKey(publicKeys[i]),
+                  Buffer.from([OP_EQUALVERIFY, OP_CHECKSIG])
+                ]);
           let pseudoTX = Object.assign({}, targetTransaction);
           let pseudoTrustedInputs = useBip143
             ? [trustedInputs[i]]
@@ -806,10 +869,12 @@ btc.createPaymentTransactionNew(
         for (let i = 0; i < inputs.length; i++) {
           if (segwit) {
             targetTransaction.witness = Buffer.alloc(0);
-            targetTransaction.inputs[i].script = Buffer.concat([
-              Buffer.from("160014", "hex"),
-              this.hashPublicKey(publicKeys[i])
-            ]);
+            if (!bech32) {
+              targetTransaction.inputs[i].script = Buffer.concat([
+                Buffer.from("160014", "hex"),
+                this.hashPublicKey(publicKeys[i])
+              ]);
+            }
           } else {
             const signatureSize = Buffer.alloc(1);
             const keySize = Buffer.alloc(1);
@@ -856,6 +921,13 @@ btc.createPaymentTransactionNew(
           }
           result = Buffer.concat([result, witness]);
         }
+
+        // FIXME: In ZEC or KMD sapling lockTime is serialized before expiryHeight.
+        // expiryHeight is used only in overwinter/sapling so I moved lockTimeBuffer here
+        // and it should not break other coins because expiryHeight is false for them.
+        // Don't know about Decred though.
+        result = Buffer.concat([result, lockTimeBuffer]);
+
         if (expiryHeight) {
           result = Buffer.concat([
             result,
@@ -863,8 +935,6 @@ btc.createPaymentTransactionNew(
             targetTransaction.extraData || Buffer.alloc(0)
           ]);
         }
-
-        result = Buffer.concat([result, lockTimeBuffer]);
 
         if (isDecred) {
           let decredWitness = Buffer.from([targetTransaction.inputs.length]);
@@ -1109,13 +1179,23 @@ const tx1 = btc.splitTransaction("01000000014ea60aeac5252c14291d428915bd7ccd1bfc
     for (let i = 0; i < numberInputs; i++) {
       const prevout = transaction.slice(offset, offset + 36);
       offset += 36;
-      varint = this.getVarint(transaction, offset);
-      offset += varint[1];
-      const script = transaction.slice(offset, offset + varint[0]);
-      offset += varint[0];
+      let script = Buffer.alloc(0);
+      let tree = Buffer.alloc(0);
+      //No script for decred, it has a witness
+      if (!isDecred) {
+        varint = this.getVarint(transaction, offset);
+        offset += varint[1];
+        script = transaction.slice(offset, offset + varint[0]);
+        offset += varint[0];
+      } else {
+        //Tree field
+        tree = transaction.slice(offset, offset + 1);
+        offset += 1;
+      }
+
       const sequence = transaction.slice(offset, offset + 4);
       offset += 4;
-      inputs.push({ prevout, script, sequence });
+      inputs.push({ prevout, script, sequence, tree });
     }
     varint = this.getVarint(transaction, offset);
     const numberOutputs = varint[0];
@@ -1149,6 +1229,29 @@ const tx1 = btc.splitTransaction("01000000014ea60aeac5252c14291d428915bd7ccd1bfc
     }
     if (hasExtraData) {
       extraData = transaction.slice(offset);
+    }
+
+    //Get witnesses for Decred
+    if (isDecred) {
+      varint = this.getVarint(transaction, offset);
+      offset += varint[1];
+      if (varint[0] !== numberInputs) {
+        throw new Error("splitTransaction: incoherent number of witnesses");
+      }
+      for (let i = 0; i < numberInputs; i++) {
+        //amount
+        offset += 8;
+        //block height
+        offset += 4;
+        //block index
+        offset += 4;
+        //Script size
+        varint = this.getVarint(transaction, offset);
+        offset += varint[1];
+        const script = transaction.slice(offset, offset + varint[0]);
+        offset += varint[0];
+        inputs[i].script = script;
+      }
     }
 
     return {
@@ -1197,24 +1300,26 @@ const outputScript = btc.serializeTransactionOutputs(tx1).toString('hex');
     additionals: Array<string> = []
   ) {
     const isDecred = additionals.includes("decred");
+    const isBech32 = additionals.includes("bech32");
     let inputBuffer = Buffer.alloc(0);
     let useWitness =
       typeof transaction["witness"] != "undefined" && !skipWitness;
     transaction.inputs.forEach(input => {
-      inputBuffer = isDecred
-        ? Buffer.concat([
-            inputBuffer,
-            input.prevout,
-            Buffer.from([0x00]), //tree
-            input.sequence
-          ])
-        : Buffer.concat([
-            inputBuffer,
-            input.prevout,
-            this.createVarint(input.script.length),
-            input.script,
-            input.sequence
-          ]);
+      inputBuffer =
+        isDecred || isBech32
+          ? Buffer.concat([
+              inputBuffer,
+              input.prevout,
+              Buffer.from([0x00]), //tree
+              input.sequence
+            ])
+          : Buffer.concat([
+              inputBuffer,
+              input.prevout,
+              this.createVarint(input.script.length),
+              input.script,
+              input.sequence
+            ]);
     });
 
     let outputBuffer = this.serializeTransactionOutputs(transaction);
@@ -1270,7 +1375,8 @@ const outputScript = btc.serializeTransactionOutputs(tx1).toString('hex');
 type TransactionInput = {
   prevout: Buffer,
   script: Buffer,
-  sequence: Buffer
+  sequence: Buffer,
+  tree?: Buffer
 };
 
 /**
